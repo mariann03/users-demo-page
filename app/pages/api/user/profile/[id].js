@@ -1,29 +1,19 @@
 import { query } from '../../../../lib/db'
-import errorHandler, { NO_USER_PROFILE, FORBIDDEN } from '../../../../utils/api/errorHandler'
 import withUser from '../../../../utils/api/middlewares/withUser'
+import { NO_USER_PROFILE, FORBIDDEN } from '../../../../utils/api/middlewares/withErrorHandler'
+import { errorIf } from '../../../../utils/api/errors'
 
 async function id(req, res) {
-  try {
-    const {
-      query: { id },
-      user
-    } = req
-    if (user.role !== 'admin' && user.id !== id) {
-      res.status(403).json({ error: errorHandler(FORBIDDEN) })
-      return
-    }
-    const [userProfile] = await query`SELECT * FROM users_information WHERE id=${id}`
+  const {
+    query: { id },
+    user
+  } = req
+  errorIf(user.role !== 'admin' && user.id !== id, FORBIDDEN)
 
-    if (!userProfile) {
-      res.status(404).json({ error: errorHandler(NO_USER_PROFILE) })
-      return
-    }
+  const [userProfile] = await query`SELECT * FROM users_information WHERE id=${id}`
+  errorIf(!userProfile, NO_USER_PROFILE)
 
-    res.status(200).json({ user: userProfile })
-  } catch (error) {
-    console.error(error)
-    res.status(400).json({ error: errorHandler() })
-  }
+  res.status(200).json({ user: userProfile })
 }
 
 export default withUser(id)

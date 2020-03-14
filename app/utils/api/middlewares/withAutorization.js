@@ -1,18 +1,15 @@
 import jwt from '../../api/jwt'
-import errorHandler, { TOKEN_EXPIRED_ERROR, TOKEN_ERROR } from '../errorHandler'
+import withErrorHandler, { TOKEN_ERROR } from './withErrorHandler'
 
-export default function withAutorization(handler) {
-  return (req, res) => {
+function withAutorization(handler) {
+  return async (req, res) => {
     try {
       req.userId = jwt.verify(req.headers.authorization).userId
-      handler(req, res)
     } catch (error) {
-      if (error.name === TOKEN_EXPIRED_ERROR) {
-        res.status(401).json({ error: errorHandler(TOKEN_EXPIRED_ERROR) })
-        return
-      }
-      console.error(error)
-      res.status(401).json({ error: errorHandler(TOKEN_ERROR) })
+      throw TOKEN_ERROR
     }
+    await handler(req, res)
   }
 }
+
+export default handler => withErrorHandler(withAutorization(handler))
