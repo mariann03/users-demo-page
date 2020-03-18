@@ -22,7 +22,8 @@ before starting make sure to have installed:
 (when you want to stop docker just run ```make docker-stop```)
 
 ### Runinig the app
-1. in ./app directory run ```npm dev```
-2. enter to [localhost:3000](http://localhost:3000)
+1. in ./app directory run ```npm i```
+2. then run ```npm run dev```
+3. enter to [localhost:3000](http://localhost:3000)
 
 #### and that's it, enjoy!
