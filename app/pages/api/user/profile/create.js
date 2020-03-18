@@ -11,9 +11,9 @@ async function createProfile(req, res) {
       users_information (id, name, email, career, date_of_birth, phone, country, city, payment_method, installments) 
       values (${id}, ${name}, ${email}, ${career}, ${dateOfBirth}, ${phone}, ${country}, ${city}, ${paymentMethod}, ${installments})
     `
-  errorIf(error, error.code)
+  errorIf(error, error?.code + '_PROFILE')
 
-  res.status(200).json({ user: { ...req.body, ...req.user } })
+  res.status(200).json({ ...req.body, ...req.user })
 }
 
 export default withUser(createProfile)

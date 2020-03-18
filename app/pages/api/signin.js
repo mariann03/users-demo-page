@@ -1,8 +1,9 @@
 import { query } from '../../lib/db'
 import jwt from '../../utils/api/jwt'
 import bcrypt from 'bcrypt'
-import withErrorHandler, { NO_EMAIL_PASS, EMAIL_PASSWORD_ERROR } from '../../utils/api/middlewares/withErrorHandler'
 import { errorIf } from '../../utils/api/errors'
+
+import withErrorHandler, { NO_EMAIL_PASS, EMAIL_PASSWORD_ERROR } from '../../utils/api/middlewares/withErrorHandler'
 
 async function signin(req, res) {
   const { email, password } = req.body
