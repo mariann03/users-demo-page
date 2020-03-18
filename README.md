@@ -1,4 +1,4 @@
-# users-demo-page
+# Users demo page
 User account creation page made with Next.js, Material-ui, Serverless and MySQL.
 
 [ERD](https://dbdiagram.io/d/5e727f374495b02c3b886ef5)
