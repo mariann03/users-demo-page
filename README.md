@@ -29,8 +29,8 @@ before starting make sure to have installed:
 
 #### and that's it, enjoy!
 
-### Setting up enviroment (optional)
-you can set your own enviroment, just create a `.env.build` file in root and add the followin variables
+### Setting up environment (optional)
+you can set up your own environment just create an .env.build file at the root and add the following variables
 ```
 MYSQL_HOST=[your_sql_host]
 MYSQL_DATABASE=[your_sql_database_name]
