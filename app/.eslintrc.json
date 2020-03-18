@@ -1,13 +1,10 @@
 {
+  "parser": "babel-eslint",
   "env": {
     "browser": true,
     "es6": true
   },
-  "extends": [
-    "plugin:react/recommended",
-    "plugin:prettier/recommended",
-    "standard"
-  ],
+  "extends": ["plugin:react/recommended", "plugin:prettier/recommended", "standard"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
@@ -23,6 +20,8 @@
   "plugins": ["react", "prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "space-before-function-paren": "off"
+    "space-before-function-paren": "off",
+    "template-curly-spacing" : "off",
+    "indent" : "off"
   }
 }
