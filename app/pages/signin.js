@@ -5,14 +5,16 @@ import useForm from '../src/hooks/useForm'
 import Link from 'next/link'
 import Button from '../src/components/Button'
 import usePost from '../src/hooks/usePost'
-import { useContext } from '../src/contexts/SessionManager'
+import { useStateContext } from '../src/context/State'
+import { singIn } from '../src/context/actions'
 
-export default function SignUp() {
-  const classes = useStyles()
-  const inputProps = { variant: 'outlined', required: true, fullWidth: true, autoFocus: true }
+export default function SignIn() {
   const [email, password] = useForm(2)
   const { post, loading, error } = usePost()
-  const { saveToken } = useContext()
+  const { dispatch } = useStateContext()
+
+  const classes = useStyles()
+  const inputProps = { variant: 'outlined', required: true, fullWidth: true, autoFocus: true }
 
   async function handleOnSubmit(e) {
     e.preventDefault()
@@ -21,7 +23,7 @@ export default function SignUp() {
       password: password.value
     })
     if (res.status >= 400) return
-    saveToken(res.data.token)
+    singIn(dispatch, res.data.token)
   }
 
   return (

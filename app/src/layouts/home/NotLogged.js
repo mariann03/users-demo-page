@@ -1,15 +1,6 @@
 import { Typography, makeStyles, Link as MUILink } from '@material-ui/core'
 import Link from 'next/link'
 
-const useStyles = makeStyles(theme => ({
-  getStarted: {
-    margin: theme.spacing(1, 1.5)
-  },
-  link: {
-    cursor: 'pointer'
-  }
-}))
-
 export default function NotLoggedContent() {
   const classes = useStyles()
 
@@ -39,3 +30,12 @@ export default function NotLoggedContent() {
     </>
   )
 }
+
+const useStyles = makeStyles(theme => ({
+  getStarted: {
+    margin: theme.spacing(1, 1.5)
+  },
+  link: {
+    cursor: 'pointer'
+  }
+}))

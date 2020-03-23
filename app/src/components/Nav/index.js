@@ -1,5 +1,4 @@
 import { AppBar, Toolbar, Typography, makeStyles } from '@material-ui/core'
-import { useContext } from '../../contexts/SessionManager'
 import HomeIcon from '@material-ui/icons/Home'
 
 import Link from 'next/link'
@@ -7,12 +6,13 @@ import Link from 'next/link'
 import NotLogged from './NotLogged'
 import Logged from './Logged'
 import { useRouter } from 'next/router'
+import { useStateContext } from '../../context/State'
 
 export default function Nav() {
   const classes = useStyles()
   const { pathname } = useRouter()
-  const { isLogged, removeToken } = useContext()
-  const NavContent = isLogged ? Logged : NotLogged
+  const { state } = useStateContext()
+  const NavContent = state?.authToken ? Logged : NotLogged
 
   return (
     <AppBar position='static' color='default' elevation={0} className={classes.appBar}>
@@ -27,7 +27,7 @@ export default function Nav() {
           )}
         </Link>
         <nav className={classes.container}>
-          <NavContent className={classes.link} removeToken={removeToken} />
+          <NavContent className={classes.link} />
         </nav>
       </Toolbar>
     </AppBar>

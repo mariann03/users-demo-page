@@ -1,12 +1,16 @@
 import Axios from 'axios'
 import { useState, useCallback } from 'react'
-import { useContext } from '../contexts/SessionManager'
+import { useStateContext } from '../context/State'
+import { singOut } from '../context/actions'
 
 export default function usePost(defaultUrl, defaultData, defaultConfig = { headers: {} }) {
   const [response, setResponse] = useState({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const { authToken, removeToken } = useContext()
+  const {
+    state: { authToken },
+    dispatch
+  } = useStateContext()
 
   const post = useCallback(
     async (url = defaultUrl, data = defaultData, config = defaultConfig) => {
@@ -25,7 +29,7 @@ export default function usePost(defaultUrl, defaultData, defaultConfig = { heade
         setError(response)
         res = response
         if (res.status === 401) {
-          removeToken()
+          singOut(dispatch)
         }
       }
       setLoading(false)

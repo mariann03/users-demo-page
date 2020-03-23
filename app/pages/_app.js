@@ -5,13 +5,20 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../src/theme'
 import Nav from '../src/components/Nav'
-import SessionManager from '../src/contexts/SessionManager'
-import User from '../src/contexts/User'
-import UserProfile from '../src/contexts/UserProfile'
-import SelectedUser from '../src/contexts/SelectedUser'
-import Search from '../src/contexts/Search'
+import StateProvider from '../src/context/State'
 
 export default class MyApp extends App {
+  static async getInitialProps({ Component, ctx }) {
+    const stateProviderProps = StateProvider.getInitialProps(ctx)
+
+    let pageProps
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
+    }
+
+    return { stateProviderProps, pageProps }
+  }
+
   componentDidMount() {
     const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles) {
@@ -20,8 +27,7 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props
-
+    const { Component, pageProps, stateProviderProps } = this.props
     return (
       <>
         <Head>
@@ -29,19 +35,11 @@ export default class MyApp extends App {
           <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width' />
         </Head>
         <ThemeProvider theme={theme}>
-          <SessionManager.Provider>
-            <User.Provider>
-              <UserProfile.Provider>
-                <Search.Provider>
-                  <SelectedUser.Provider>
-                    <CssBaseline />
-                    <Nav />
-                    <Component {...pageProps} />
-                  </SelectedUser.Provider>
-                </Search.Provider>
-              </UserProfile.Provider>
-            </User.Provider>
-          </SessionManager.Provider>
+          <StateProvider {...stateProviderProps}>
+            <CssBaseline />
+            <Nav />
+            <Component {...pageProps} />
+          </StateProvider>
         </ThemeProvider>
         <style jsx global>{`
           a {

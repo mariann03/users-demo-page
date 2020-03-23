@@ -3,11 +3,11 @@ import { fade, makeStyles } from '@material-ui/core/styles'
 
 import SearchIcon from '@material-ui/icons/Search'
 import Select from '../../Select'
-import { useContext } from '../../../contexts/Search'
+import useSearch from './useSearch'
 
 export default function SearchBar() {
   const classes = useStyles()
-  const { handlers, filters } = useContext()
+  const { handlers, filters } = useSearch()
 
   const showCareer = handlers.filterName.value === 'Career' && filters?.careers
   const showCountry = handlers.filterName.value === 'Country' && filters?.countries

@@ -1,15 +1,16 @@
 import { Grid, Avatar, Typography, makeStyles } from '@material-ui/core'
 import { string } from 'prop-types'
-import { useContext } from '../../contexts/SelectedUser'
 import { useRouter } from 'next/router'
+import { useStateContext } from '../../context/State'
+import { selectUser } from '../../context/actions'
 
 export default function UserCard({ id, name, email, ...rest }) {
   const classes = useStyles()
-  const { setSelectedUser } = useContext()
   const router = useRouter()
+  const { dispatch } = useStateContext()
 
   function handleOnClick() {
-    setSelectedUser({ id, name, email, ...rest })
+    selectUser(dispatch, { id, name, email, ...rest })
     router.push('/user/[id]', `/user/${id}`)
   }
 

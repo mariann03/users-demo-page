@@ -1,30 +1,19 @@
 import { Typography, GridList, GridListTile, makeStyles, CircularProgress, Box } from '@material-ui/core'
 import UserCard from '../../../components/UserCard'
-import { useContext } from '../../../contexts/Search'
+import { useStateContext } from '../../../context/State'
+import Alert from '@material-ui/lab/Alert'
 
-const loader = (
-  <Box display='flex' justifyContent='center' marginTop={10}>
-    <CircularProgress />
-  </Box>
-)
+function Loader() {
+  return (
+    <Box display='flex' justifyContent='center' marginTop={10}>
+      <CircularProgress />
+    </Box>
+  )
+}
 
 export default function AdminPage() {
   const classes = useStyles()
-  const { data = [], loading, error } = useContext().result
-
-  let renderedList = error || loader
-
-  if (!loading) {
-    renderedList = (
-      <GridList cellHeight='auto' spacing={14}>
-        {data.map(user => (
-          <GridListTile key={user.id} classes={{ tile: classes.card }}>
-            <UserCard {...user} />
-          </GridListTile>
-        ))}
-      </GridList>
-    )
-  }
+  const { data, loading, error } = useStateContext().state.search
 
   return (
     <>
@@ -39,7 +28,17 @@ export default function AdminPage() {
         className={classes.description}>
         Here are all registered members
       </Typography>
-      {renderedList}
+      {data && (
+        <GridList cellHeight='auto' spacing={14}>
+          {data.map(user => (
+            <GridListTile key={user.id} classes={{ tile: classes.card }}>
+              <UserCard {...user} />
+            </GridListTile>
+          ))}
+        </GridList>
+      )}
+      {loading && <Loader />}
+      {error && <Alert severity='error'>{error}</Alert>}
     </>
   )
 }

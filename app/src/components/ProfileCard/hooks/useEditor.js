@@ -1,21 +1,26 @@
 import usePost from '../../../hooks/usePost'
 import useForm from '../../../hooks/useForm'
 import useEditing from './useEditing'
-import { useContext } from '../../../contexts/UserProfile'
 import { useMemo, useCallback, useEffect } from 'react'
+import { useStateContext } from '../../../context/State'
+import { updateProfile } from '../../../context/actions'
 
 export default function useEditor(defaultValue) {
-  const { loading, error, updateData, ...rest } = useContext()
+  const {
+    state: {
+      userProfile: { loading, error, ...rest }
+    },
+    dispatch
+  } = useStateContext()
+
   const { post, loading: postLoading, error: postError } = usePost()
   const handlers = useForm(8)
   const editableFields = useEditing(7)
-  const [nameE, locationE, careerE, dateOfBirthE, phoneE, paymentMethodE, installmentsE] = editableFields
   const [name, city, country, career, dateOfBirth, phone, paymentMethod, installments] = handlers
 
   const data = useMemo(() => {
     if (!defaultValue) return rest.data
-    if (defaultValue?.id !== rest?.data?.id) return defaultValue
-    return rest.data
+    return defaultValue
   })
 
   useEffect(() => {
@@ -57,7 +62,7 @@ export default function useEditor(defaultValue) {
       installments: installments.value
     }).then(res => {
       if (res.status >= 400) return res
-      updateData(res.data)
+      updateProfile(dispatch, res.data)
       finishEditing()
     })
   }, [handlers])
@@ -84,13 +89,13 @@ export default function useEditor(defaultValue) {
     updater: { loading: postLoading, error: postError },
     handlers: { name, city, country, career, dateOfBirth, phone, paymentMethod, installments },
     editableFields: {
-      name: nameE,
-      location: locationE,
-      career: careerE,
-      dateOfBirth: dateOfBirthE,
-      phone: phoneE,
-      paymentMethod: paymentMethodE,
-      installments: installmentsE
+      name: editableFields[0],
+      location: editableFields[1],
+      career: editableFields[2],
+      dateOfBirth: editableFields[3],
+      phone: editableFields[4],
+      paymentMethod: editableFields[5],
+      installments: editableFields[6]
     },
     saveChanges,
     unsavedChanges

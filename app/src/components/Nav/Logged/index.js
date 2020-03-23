@@ -1,19 +1,30 @@
 import Button from '@material-ui/core/Button'
 
-import PropTypes from 'prop-types'
-import { useContext } from '../../../contexts/User'
 import { useRouter } from 'next/router'
 import SearchBar from './SearchBar'
 
-export default function Logged({ className, removeToken }) {
-  const { data, loading } = useContext()
+import { singOut } from '../../../context/actions'
+import { useStateContext } from '../../../context/State'
+
+import PropTypes from 'prop-types'
+
+export default function Logged({ className }) {
   const { pathname } = useRouter()
-  const showSearch = !loading && data?.role === 'admin' && pathname === '/'
+  const {
+    state: { user },
+    dispatch
+  } = useStateContext()
+
+  const showSearch = user?.data?.role === 'admin' && pathname === '/'
+
+  function handleOnClick() {
+    singOut(dispatch)
+  }
 
   return (
     <>
       {showSearch && <SearchBar />}
-      <Button color='primary' variant='outlined' className={className} onClick={removeToken}>
+      <Button color='primary' variant='outlined' className={className} onClick={handleOnClick}>
         log out
       </Button>
     </>
@@ -21,6 +32,5 @@ export default function Logged({ className, removeToken }) {
 }
 
 Logged.propTypes = {
-  className: PropTypes.string.isRequired,
-  removeToken: PropTypes.func.isRequired
+  className: PropTypes.string.isRequired
 }

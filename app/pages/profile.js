@@ -1,19 +1,24 @@
 import { useState, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/router'
+
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
-import Button from '../src/components/Button'
 import Typography from '@material-ui/core/Typography'
-import { useRouter } from 'next/router'
-import { capitalize } from '../utils/app/strings'
+import Alert from '@material-ui/lab/Alert'
+import Button from '../src/components/Button'
+
 import PersonalInformation from '../src/layouts/profile/PersonalInformation'
 import PaymentOptions from '../src/layouts/profile/PaymentOptions'
+
 import useForm from '../src/hooks/useForm'
 import usePost from '../src/hooks/usePost'
-import Alert from '@material-ui/lab/Alert'
-import { useContext } from '../src/contexts/UserProfile'
+import { capitalize } from '../utils/app/strings'
+
+import { useStateContext } from '../src/context/State'
+import { updateProfile } from '../src/context/actions'
 
 const steps = ['Personal information', 'Payment options']
 
@@ -39,7 +44,12 @@ export default function Profile() {
     { paymentMethod, installments }
   ]
   const { post, error, loading } = usePost()
-  const { data, loading: profileLoading, updateData } = useContext()
+  const {
+    state: {
+      userProfile: { data, loading: profileLoading }
+    },
+    dispatch
+  } = useStateContext()
 
   useEffect(() => {
     if (!data?.id) return
@@ -64,14 +74,14 @@ export default function Profile() {
       installments: installments.value
     })
     if (response.status >= 400) return console.error(response.data)
-    updateData(response.data)
+    updateProfile(dispatch, response.data)
   }
 
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
 
-  if (profileLoading || data?.id) return 'loading...'
+  if (profileLoading || data?.id) return null
 
   return (
     <main className={classes.layout}>
