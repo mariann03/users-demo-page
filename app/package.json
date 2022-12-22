@@ -22,7 +22,7 @@
     "bcrypt": "^4.0.1",
     "dotenv": "^8.2.0",
     "js-cookie": "^2.2.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "nanoid": "^2.1.11",
     "next": "9.3.2",
     "next-cookies": "^2.0.3",
